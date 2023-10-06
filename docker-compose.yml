@@ -1,0 +1,67 @@
+version: "3.7"
+
+x-app-defaults: &app-defaults
+  restart: unless-stopped
+  image: listmonk/listmonk:latest
+  ports:
+    - "9000:9000"
+  networks:
+    - listmonk
+  environment:
+    - TZ=Asia/Kolkata
+
+x-db-defaults: &db-defaults
+  image: postgres:13
+  ports:
+    - "9432:5432"
+  networks:
+    - listmonk
+  environment:
+    - POSTGRES_PASSWORD=password
+    - POSTGRES_USER=listmonk
+    - POSTGRES_DB=listmonk
+  restart: unless-stopped
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U listmonk"]
+    interval: 10s
+    timeout: 5s
+    retries: 6
+
+services:
+  db:
+    <<: *db-defaults
+    container_name: listmonk_db
+    volumes:
+      - type: volume
+        source: listmonk-data
+        target: /var/lib/postgresql/data
+
+  app:
+    <<: *app-defaults
+    container_name: listmonk_app
+    depends_on:
+      - db
+    volumes:
+      - ./config.toml:/listmonk/config.toml
+
+
+  caddy:
+    image: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/data/:/data/
+      - ./caddy/config/:/config/
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      - listmonk
+    depends_on:
+      - app
+
+networks:
+  listmonk:
+
+volumes:
+  listmonk-data:
