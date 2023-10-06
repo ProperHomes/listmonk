@@ -5,7 +5,7 @@
     - add domain to 127.0.0.1 to /etc/hosts. Dont delete the localhost one.
     - mkdir listmonk && sh -c "$(curl -fsSL https://raw.githubusercontent.com/knadh/listmonk/master/install-prod.sh)"
 
-# instead of nginx we will use caddy. If you still prefer nginx then use the instructions in the next section.
+# instead of nginx we will use caddy because its way easier than managing nginx.
     - Change admin password in config.toml
     - Add caddy to docker-compose.yml
     - Add a file named 'Caddyfile' inside a folder called 'caddy' within the same directory that docker-compose.yml file resides in.
