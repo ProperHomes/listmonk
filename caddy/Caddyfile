@@ -1,0 +1,11 @@
+{
+    email emailaddresshere
+}
+
+domain (eg: subdomain.recipeat.in) {
+ # Enable the static file server.
+ file_server
+
+ # Have Caddy Another common task is to set up a reverse proxy:
+ reverse_proxy app:9000
+}
