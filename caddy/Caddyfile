@@ -2,7 +2,7 @@
     email emailaddresshere
 }
 
-domain (eg: subdomain.recipeat.in) {
+domain (eg: subdomain.domain.in) {
  # Enable the static file server.
  file_server
 
